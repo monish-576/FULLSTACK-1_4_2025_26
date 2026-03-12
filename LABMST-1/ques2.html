@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ques2</title>
+</head>
+<body>
+    
+</body>
+<script>
+    const myPromise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const success = true;
+            if (success) {
+                resolve("Data Fetched seccessfully");
+            }
+        }, 2000);
+    }); 
+    myPromise.then((mssg)=>{
+        console.log(mssg);
+    })
+    .catch((err)=>{
+        console.log("Error occured"+ err);
+    })
+
+</script>
+</html>
