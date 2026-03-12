@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ques4</title>
+</head>
+<body>
+    <ul id="myList">
+        <li>Item 1</li>
+        <li>Item 2</li> 
+        <li>Item 3</li>
+    </ul>
+    <input type="text" id="itemInput" placeholder="Enter item name">
+    <button id="addButton" onclick="addItem()">Add Item</button>
+    <button id="removeButton" onclick="removeItem()">Remove Item</button>
+</body>
+<script>
+    function addItem() {
+        const myList = document.getElementById("myList");
+        const newItem = document.createElement("li");
+        const itemName = document.getElementById("itemInput").value;
+        newItem.textContent = itemName;
+        myList.appendChild(newItem);
+    }
+
+    function removeItem() {
+        const myList = document.getElementById("myList");
+        if (myList.lastElementChild) {
+            myList.removeChild(myList.lastElementChild);
+        }
+    }
+    </script>
+</html>
