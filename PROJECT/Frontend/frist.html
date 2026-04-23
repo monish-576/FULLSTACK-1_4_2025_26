@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexWork — Find Your Dream Job</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060910;
+    --surface: #0d1117;
+    --surface2: #131920;
+    --border: rgba(255,255,255,0.07);
+    --accent: #4fffb0;
+    --accent2: #00c2ff;
+    --accent3: #ff6b6b;
+    --text: #e8edf5;
+    --muted: #6b7280;
+    --card: rgba(13,17,23,0.8);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BACKGROUND MESH */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(79,255,176,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,194,255,0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* GRID OVERLAY */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAVBAR */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 60px;
+    background: rgba(6,9,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .nav-links { display: flex; align-items: center; gap: 10px; }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); background: var(--border); }
+
+  .nav-links .cta {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    padding: 9px 20px;
+    border-radius: 8px;
+  }
+
+  .nav-links .cta:hover { background: #5dffc0; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(79,255,176,0.3); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 100px 20px 60px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(79,255,176,0.08);
+    border: 1px solid rgba(79,255,176,0.2);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(42px, 7vw, 88px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+    animation: fadeDown 0.6s ease 0.1s both;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+    font-weight: 300;
+    animation: fadeDown 0.6s ease 0.2s both;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    animation: fadeDown 0.6s ease 0.3s both;
+  }
+
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* SECTION */
+  .section {
+    position: relative;
+    z-index: 1;
+    padding: 60px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 36px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .section-count {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* JOB GRID */
+  .job-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  /* JOB CARD */
+  .job-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .job-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(79,255,176,0.03), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .job-card:hover {
+    border-color: rgba(79,255,176,0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(79,255,176,0.1);
+  }
+
+  .job-card:hover::before { opacity: 1; }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .job-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: var(--surface2);
+  }
+
+  .job-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-hot { background: rgba(255,107,107,0.12); color: var(--accent3); border: 1px solid rgba(255,107,107,0.2); }
+  .badge-new { background: rgba(79,255,176,0.1); color: var(--accent); border: 1px solid rgba(79,255,176,0.2); }
+  .badge-remote { background: rgba(0,194,255,0.1); color: var(--accent2); border: 1px solid rgba(0,194,255,0.2); }
+
+  .job-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+
+  .job-company {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .job-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .meta-pill {
+    font-size: 12px;
+    background: var(--surface2);
+    color: var(--muted);
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .salary {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .apply-btn {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .apply-btn:hover {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    transform: scale(1.05);
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .job-card:nth-child(1) { animation-delay: 0.1s; }
+  .job-card:nth-child(2) { animation-delay: 0.15s; }
+  .job-card:nth-child(3) { animation-delay: 0.2s; }
+  .job-card:nth-child(4) { animation-delay: 0.25s; }
+  .job-card:nth-child(5) { animation-delay: 0.3s; }
+  .job-card:nth-child(6) { animation-delay: 0.35s; }
+  .job-card:nth-child(7) { animation-delay: 0.4s; }
+  .job-card:nth-child(8) { animation-delay: 0.45s; }
+  .job-card:nth-child(9) { animation-delay: 0.5s; }
+
+  @media (max-width: 900px) {
+    nav { padding: 14px 20px; }
+    .section { padding: 30px 20px; }
+    .hero { padding: 60px 20px 40px; }
+    .job-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <span class="logo-dot"></span> NexWork
+  </div>
+  <div class="nav-links">
+    <a href="#">Browse</a>
+    <a href="login.html">Login</a>
+    <a href="register.html" class="cta">Get Started →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🔥 9 positions open right now</div>
+  <h1>Land your next<br><span class="highlight">dream role.</span></h1>
+  <p>Top companies are actively hiring. Find roles that match your skills and ambition.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">9+</div>
+      <div class="stat-label">Open Roles</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">9</div>
+      <div class="stat-label">Companies</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">₹4–25L</div>
+      <div class="stat-label">Salary Range</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <div class="section-title">Open Positions</div>
+    <div class="section-count">9 jobs</div>
+  </div>
+
+  <div class="job-grid">
+
+    <div class="job-card">
+      <div class="card-top">
+        <div class="job-icon">💻</div>
+        <span class="job-badge badge-hot">Hot</span>
+      </div>
+      <div class="job-title">Software Developer</div>
+      <div class="job-company">Google · Bangalore</div>
+      <div class="job-meta">
+        <span class="meta-pill">Java</span>
+        <span class="meta-pill">Node.js</span>
+        <span class="meta-pill">Full-time</span>
+      </div>
+      <div class="card-footer">
+        <span class="salary">₹10–20 LPA</span>
+        <button class="apply-btn" onclick="applyJob('💻 Software Developer')">Apply →</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="card-top">
+        <div class="job-icon">📊</div>
+        <span class="job-badge badge-new">New</span>
+      </div>
+      <div class="job-title">Data Analyst</div>
+      <div class="job-company">Amazon · Hyderabad</div>
+      <div class="job-meta">
+        <span class="meta-pill">Python</span>
+        <span class="meta-pill">SQL</span>
+        <span class="meta-pill">Full-time</span>
+      </div>
+      <div class="card-footer">
+        <span class="salary">₹8–15 LPA</span>
+        <button class="apply-btn" onclick="applyJob('📊 Data Analyst')">Apply →</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="card-top">
+        <div class="job-icon">🎨</div>
+        <span class="job-badge badge-remote">Remote</span>
+      </div>
+      <div class="job-title">UI/UX Designer</div>
+      <div class="job-company">Zomato · Remote</div>
+      <div class="job-meta">
+        <span class="meta-pill">Figma</span>
+        <span class="meta-pill">Adobe XD</span>
+        <span class="meta-pill">Remote</span>
+      </div>
+      <div class="card-footer">
+        <span class="salary">₹6–12 LPA</span>
+        <button class="apply-btn" onclick="applyJob('🎨 UI/UX Designer')">Apply →</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="card-top">
+        <div class="job-icon">🤖</div>
+        <span class="job-badge badge-hot">Hot</span>
+      </div>
+      <div class="job-title">AI Engineer</div>
+      <div class="job-company">OpenAI · Bangalore</div>
+      <div class="job-meta">
+        <span class="meta-pill">Python</span>
+        <span class="meta-pill">ML</span>
+        <span class="meta-pill">Full-time</span>
+      </div>
+      <div class="card-footer">
+        <span class="salary">₹15–25 LPA</span>
+        <button class="apply-btn" onclick="applyJob('🤖 AI Engineer')">Apply →</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="card-top">
+        <div class="job-icon">🌐</div>
+        <span class="job-badge badge-remote">Remote</span>
+      </div>
+      <div class="job-title">Web Developer</div>
+      <div class="job-company">Startup · Remote</div>
+      <div class="job-meta">
+        <span class="meta-pill">HTML</span>
+        <span class="meta-pill">CSS</span>
+        <span class="meta-pill">JS</span>
+      </div>
+      <div class="card-footer">
+        <span class="salary">₹5–10 LPA</span>
+        <button class="apply-btn" onclick="applyJob('🌐 Web Developer')">Apply →</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="card-top">
+        <div class="job-icon">🏦</div>
+        <span class="job-badge badge-new">New</span>
+      </div>
+      <div class="job-title">Banking Officer</div>
+      <div class="job-company">SBI · Chennai</div>
+      <div class="job-meta">
+        <span class="meta-pill">Finance</span>
+        <span class="meta-pill">Excel</span>
+        <span class="meta-pill">Full-time</span>
+      </div>
+      <div class="card-footer">
+        <span class="salary">₹4–9 LPA</span>
+        <button class="apply-btn" onclick="applyJob('🏦 Banking Officer')">Apply →</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="card-top">
+        <div class="job-icon">📱</div>
+        <span class="job-badge badge-new">New</span>
+      </div>
+      <div class="job-title">Android Developer</div>
+      <div class="job-company">Flipkart · Bangalore</div>
+      <div class="job-meta">
+        <span class="meta-pill">Kotlin</span>
+        <span class="meta-pill">Android</span>
+        <span class="meta-pill">Full-time</span>
+      </div>
+      <div class="card-footer">
+        <span class="salary">₹7–14 LPA</span>
+        <button class="apply-btn" onclick="applyJob('📱 Android Developer')">Apply →</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="card-top">
+        <div class="job-icon">☁️</div>
+        <span class="job-badge badge-hot">Hot</span>
+      </div>
+      <div class="job-title">Cloud Engineer</div>
+      <div class="job-company">AWS · Pune</div>
+      <div class="job-meta">
+        <span class="meta-pill">AWS</span>
+        <span class="meta-pill">DevOps</span>
+        <span class="meta-pill">Full-time</span>
+      </div>
+      <div class="card-footer">
+        <span class="salary">₹12–22 LPA</span>
+        <button class="apply-btn" onclick="applyJob('☁️ Cloud Engineer')">Apply →</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="card-top">
+        <div class="job-icon">🔐</div>
+        <span class="job-badge badge-new">New</span>
+      </div>
+      <div class="job-title">Cyber Security</div>
+      <div class="job-company">Infosys · Hyderabad</div>
+      <div class="job-meta">
+        <span class="meta-pill">Networking</span>
+        <span class="meta-pill">Security</span>
+        <span class="meta-pill">Full-time</span>
+      </div>
+      <div class="card-footer">
+        <span class="salary">₹8–18 LPA</span>
+        <button class="apply-btn" onclick="applyJob('🔐 Cyber Security')">Apply →</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>© 2025 NexWork · Built for ambitious people</footer>
+
+<script>
+function applyJob(job) {
+  const user = localStorage.getItem("userEmail");
+  if (!user) {
+    localStorage.setItem("pendingJob", job);
+    window.location.href = "login.html";
+  } else {
+    localStorage.setItem("jobRole", job);
+    window.location.href = "apply.html";
+  }
+}
+</script>
+</body>
+</html>
